@@ -1,5 +1,6 @@
 import Bool "mo:base/Bool";
 import List "mo:base/List";
+import Result "mo:base/Result";
 
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
@@ -14,10 +15,15 @@ actor ShoppingList {
     completed: Bool;
   };
 
+  type AddItemResult = {
+    id: Nat;
+    suggestions: [Text];
+  };
+
   stable var items : [Item] = [];
   stable var nextId : Nat = 0;
 
-  public func addItem(text: Text) : async Nat {
+  public func addItem(text: Text) : async AddItemResult {
     let id = nextId;
     nextId += 1;
     let newItem : Item = {
@@ -26,7 +32,11 @@ actor ShoppingList {
       completed = false;
     };
     items := Array.append(items, [newItem]);
-    id
+    let suggestions = await getSuggestions();
+    {
+      id = id;
+      suggestions = suggestions;
+    }
   };
 
   public query func getItems() : async [Item] {

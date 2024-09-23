@@ -23,11 +23,9 @@ async function loadItems() {
     `;
     shoppingList.appendChild(li);
   });
-  loadSuggestions();
 }
 
-async function loadSuggestions() {
-  const suggestions = await backend.getSuggestions();
+async function loadSuggestions(suggestions) {
   suggestionList.innerHTML = '';
   suggestions.forEach(suggestion => {
     const li = document.createElement('li');
@@ -45,9 +43,10 @@ addItemForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const text = newItemInput.value.trim();
   if (text) {
-    await backend.addItem(text);
+    const result = await backend.addItem(text);
     newItemInput.value = '';
     await loadItems();
+    loadSuggestions(result.suggestions);
   }
 });
 
@@ -60,15 +59,22 @@ shoppingList.addEventListener('click', async (e) => {
     const id = parseInt(e.target.closest('.delete-btn').dataset.id);
     await backend.deleteItem(id);
     await loadItems();
+    const suggestions = await backend.getSuggestions();
+    loadSuggestions(suggestions);
   }
 });
 
 suggestionList.addEventListener('click', async (e) => {
   if (e.target.closest('.add-suggestion-btn')) {
     const suggestion = e.target.closest('.add-suggestion-btn').dataset.suggestion;
-    await backend.addItem(suggestion);
+    const result = await backend.addItem(suggestion);
     await loadItems();
+    loadSuggestions(result.suggestions);
   }
 });
 
-window.addEventListener('load', loadItems);
+window.addEventListener('load', async () => {
+  await loadItems();
+  const suggestions = await backend.getSuggestions();
+  loadSuggestions(suggestions);
+});

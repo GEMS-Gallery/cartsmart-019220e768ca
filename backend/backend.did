@@ -4,8 +4,13 @@ type Item =
    id: nat;
    "text": text;
  };
+type AddItemResult = 
+ record {
+   id: nat;
+   suggestions: vec text;
+ };
 service : {
-  addItem: (text) -> (nat);
+  addItem: (text) -> (AddItemResult);
   deleteItem: (nat) -> (bool);
   getItems: () -> (vec Item) query;
   getSuggestions: () -> (vec text) query;
