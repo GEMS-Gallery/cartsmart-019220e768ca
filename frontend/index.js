@@ -3,6 +3,7 @@ import { backend } from 'declarations/backend';
 const shoppingList = document.getElementById('shopping-list');
 const addItemForm = document.getElementById('add-item-form');
 const newItemInput = document.getElementById('new-item-input');
+const suggestionList = document.getElementById('suggestion-list');
 
 async function loadItems() {
   const items = await backend.getItems();
@@ -21,6 +22,22 @@ async function loadItems() {
       </div>
     `;
     shoppingList.appendChild(li);
+  });
+  loadSuggestions();
+}
+
+async function loadSuggestions() {
+  const suggestions = await backend.getSuggestions();
+  suggestionList.innerHTML = '';
+  suggestions.forEach(suggestion => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span>${suggestion}</span>
+      <button class="add-suggestion-btn" data-suggestion="${suggestion}">
+        <i class="fas fa-plus"></i>
+      </button>
+    `;
+    suggestionList.appendChild(li);
   });
 }
 
@@ -42,6 +59,14 @@ shoppingList.addEventListener('click', async (e) => {
   } else if (e.target.closest('.delete-btn')) {
     const id = parseInt(e.target.closest('.delete-btn').dataset.id);
     await backend.deleteItem(id);
+    await loadItems();
+  }
+});
+
+suggestionList.addEventListener('click', async (e) => {
+  if (e.target.closest('.add-suggestion-btn')) {
+    const suggestion = e.target.closest('.add-suggestion-btn').dataset.suggestion;
+    await backend.addItem(suggestion);
     await loadItems();
   }
 });

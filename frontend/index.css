@@ -17,7 +17,7 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+h1, h2 {
   text-align: center;
   color: #333;
 }
@@ -45,12 +45,12 @@ h1 {
   cursor: pointer;
 }
 
-#shopping-list {
+#shopping-list, #suggestion-list {
   list-style-type: none;
   padding: 0;
 }
 
-#shopping-list li {
+#shopping-list li, #suggestion-list li {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -60,7 +60,7 @@ h1 {
   border-radius: 3px;
 }
 
-#shopping-list li span {
+#shopping-list li span, #suggestion-list li span {
   flex-grow: 1;
   margin-right: 1rem;
 }
@@ -70,7 +70,7 @@ h1 {
   color: #888;
 }
 
-.toggle-btn, .delete-btn {
+.toggle-btn, .delete-btn, .add-suggestion-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -84,4 +84,14 @@ h1 {
 
 .delete-btn {
   color: #f44336;
+}
+
+.add-suggestion-btn {
+  color: #2196F3;
+}
+
+#suggestions {
+  margin-top: 2rem;
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
 }
